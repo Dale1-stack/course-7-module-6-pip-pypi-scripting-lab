@@ -1,19 +1,61 @@
+"""Automation tool: generate a timestamped log file and fetch data from an API.
+
+This module demonstrates:
+- Writing results to a file using built-in File I/O.
+- Using a pip-installed third-party package (``requests``).
+- Running as a script via the ``if __name__ == "__main__"`` block.
+"""
+
 from datetime import datetime
-import os
 
-def generate_log(data):
-    # TODO: Implement log generation logic
+import requests
 
-    # STEP 1: Validate input
-    # Hint: Check if data is a list
 
-    # STEP 2: Generate a filename with today's date (e.g., "log_20250408.txt")
-    # Hint: Use datetime.now().strftime("%Y%m%d")
+def generate_log(log_data):
+    """Write a list of log entries to a timestamped file.
 
-    # STEP 3: Write the log entries to a file using File I/O
-    # Use a with open() block and write each line from the data list
-    # Example: file.write(f"{entry}\n")
+    Args:
+        log_data (list): The log entries to write. Each entry is written on
+            its own line. An empty list produces a valid, empty log file.
 
-    # STEP 4: Print a confirmation message with the filename
+    Returns:
+        str: The name of the file that was written.
 
-    pass
+    Raises:
+        ValueError: If ``log_data`` is not a list.
+    """
+    if not isinstance(log_data, list):
+        raise ValueError("log_data must be a list")
+
+    filename = f"log_{datetime.now().strftime('%Y%m%d')}.txt"
+
+    with open(filename, "w") as file:
+        for entry in log_data:
+            file.write(f"{entry}\n")
+
+    print(f"Log written to {filename}")
+    return filename
+
+
+def fetch_data():
+    """Fetch a sample post from a public API using ``requests``.
+
+    Returns:
+        dict: The decoded JSON response, or an empty dict on failure.
+    """
+    response = requests.get("https://jsonplaceholder.typicode.com/posts/1")
+    if response.status_code == 200:
+        return response.json()
+    return {}
+
+
+if __name__ == "__main__":
+    sample_log = [
+        "User logged in",
+        "User updated profile",
+        "Report exported",
+    ]
+    generate_log(sample_log)
+
+    post = fetch_data()
+    print("Fetched Post Title:", post.get("title", "No title found"))
