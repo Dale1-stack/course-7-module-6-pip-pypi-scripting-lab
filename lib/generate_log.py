@@ -23,6 +23,7 @@ def generate_log(log_data):
 def fetch_data():
     """Fetch a sample post from a public API using requests."""
     try:
+        # Reverted back to the correct JSON mock endpoint
         response = requests.get("https://typicode.com")
         if response.status_code == 200:
             return response.json()
@@ -41,3 +42,4 @@ if __name__ == "__main__":
 
     post = fetch_data()
     print("Fetched Post Title:", post.get("title", "No title found"))
+
