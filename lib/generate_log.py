@@ -1,3 +1,4 @@
+#!/usr/bin/env python3
 """Automation tool: generate a timestamped log file and fetch data from an API.
 
 This module demonstrates:
@@ -7,7 +8,6 @@ This module demonstrates:
 """
 
 from datetime import datetime
-
 import requests
 
 
@@ -43,9 +43,12 @@ def fetch_data():
     Returns:
         dict: The decoded JSON response, or an empty dict on failure.
     """
-    response = requests.get("https://jsonplaceholder.typicode.com/posts/1")
-    if response.status_code == 200:
-        return response.json()
+    try:
+        response = requests.get("https://jsonplaceholder.typicode.com/posts/1")
+        if response.status_code == 200:
+            return response.json()
+    except requests.RequestException:
+        pass
     return {}
 
 
